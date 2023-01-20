@@ -10,12 +10,20 @@ contract WavePortal {
 
     event NewWave(address indexed from, uint256 timestamp, string message);
 
+    /*
+     * I created a struct here named Wave.
+     * A struct is basically a custom datatype where we can customize what we want to hold inside it.
+     */
     struct Wave {
-        address waver;
-        string message;
-        uint256 timestamp;
+        address waver; // The address of the user who waved.
+        string message; // The message the user sent.
+        uint256 timestamp; // The timestamp when the user waved.
     }
 
+    /*
+     * I declare a variable waves that lets me store an array of structs.
+     * This is what lets me hold all the waves anyone ever sends to me!
+     */
     Wave[] waves;
 
     /*
@@ -48,14 +56,18 @@ contract WavePortal {
 
         totalWaves += 1;
         console.log("%s has waved!", msg.sender);
-
+        /*
+         * This is where I actually store the wave data in the array.
+         */
         waves.push(Wave(msg.sender, _message, block.timestamp));
 
         /*
          * Generate a new seed for the next user that sends a wave
          */
         seed = (block.difficulty + block.timestamp + seed) % 100;
-
+        /*
+         * Give a 50% chance that the user wins the prize.
+         */
         if (seed <= 50) {
             console.log("%s won!", msg.sender);
 
@@ -70,7 +82,10 @@ contract WavePortal {
 
         emit NewWave(msg.sender, block.timestamp, _message);
     }
-
+    /*
+     * I added a function getAllWaves which will return the struct array, waves, to us.
+     * This will make it easy to retrieve the waves from our website!
+     */
     function getAllWaves() public view returns (Wave[] memory) {
         return waves;
     }
